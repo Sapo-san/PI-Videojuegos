@@ -11,6 +11,15 @@ module.exports = (sequelize) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+    },  
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      // cuando se abren los detalles del juego
+      // el front avisa al back que traiga la
+      // descr desde al la API y actualice este valor
+
+      // tener cuidado con juegos creados por usuario...
     },
     release_date: {
       type: DataTypes.DATE,
@@ -23,6 +32,21 @@ module.exports = (sequelize) => {
     rating: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    platforms: {
+      type: DataTypes.STRING,
+      allowNull: false
+      // se guardan como los slug y
+      // separadas por espacios
+    },
+    /* genres: {
+      type: DataTypes.STRING,
+      allowNull: false
+      // se guardan como los slug y
+      // separadas por espacios
+    }, */
+    
+  },{
+    timestamps: false
   });
 };
