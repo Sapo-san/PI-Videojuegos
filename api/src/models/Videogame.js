@@ -38,14 +38,7 @@ module.exports = (sequelize) => {
       allowNull: false
       // se guardan como los slug y
       // separadas por espacios
-    },
-    /* genres: {
-      type: DataTypes.STRING,
-      allowNull: false
-      // se guardan como los slug y
-      // separadas por espacios
-    }, */
-    
+    },  
   },{
     timestamps: false
   });

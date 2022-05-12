@@ -135,7 +135,6 @@ async function populateDb() {
 
                 Promise.all(gameRequests).then(() => {
                     console.log("### Juegos obtenidos exitosamente de API ###")
-
                     gameRequests = gameRequests.map(insertGamesintoDB)
 
                     Promise.all(gameRequests).then(() => {
@@ -155,7 +154,6 @@ async function populateDb() {
                     console.log(err)
                 })
             })
-
 
         } else {
             console.log("Base ya está populada")
