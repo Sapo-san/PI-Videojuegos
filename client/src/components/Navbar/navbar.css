@@ -1,0 +1,52 @@
+.hidden {
+    display: none;
+}
+
+.navbar-container {
+    width: 100vw;
+    background-color: #171a21;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1em;
+
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    
+}
+
+.navlink-container {
+    border-radius: 2em;
+    background-color: #5c7e10;
+    padding: 0.7em;
+
+    transition: 0.5s;
+
+    min-width: 7em;
+}
+
+.navlink {
+    color: white;
+    
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.navlink-container:hover {
+    background-color: #91ca16
+}
+
+.navlink.active {
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 600px) {
+    .navlink:hover {
+        font-weight: normal;
+    }
+
+    .navlink.active {
+        font-weight: bold;
+    }
+}

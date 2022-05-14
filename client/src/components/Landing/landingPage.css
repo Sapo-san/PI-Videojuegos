@@ -1,0 +1,35 @@
+a {
+    transition: 0.5s;
+}
+
+.landingPage {
+    height: 100vh;
+    width: 100vw;
+    
+    /* background-color: black;
+    color: lightgray; */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 3em;
+}
+
+.landingImg {
+    outline: 5px solid lightslategray;
+}
+
+.redirectToHome {
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 600px) {
+    .landingPage {
+        gap: 1.5em;
+    }
+    
+    .landingImg {
+        max-width: 90vw;
+    }
+  }

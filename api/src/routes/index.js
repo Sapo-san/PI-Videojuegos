@@ -12,7 +12,7 @@ router.get("/videogames", (req, res, next) => {
     /*
         Con y sin query params!
     */
-    if (!req.query) {
+    if (!req.query.name) {
         // sin query
         console.log("no hay query params")
         res.status(200).send("<h1>Videogames</h1>")
