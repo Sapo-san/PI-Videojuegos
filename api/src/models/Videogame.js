@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
       allowNull: false,
     },  
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
       // cuando se abren los detalles del juego
       // el front avisa al back que traiga la
@@ -30,7 +30,7 @@ module.exports = (sequelize) => {
       allowNull: true
     },
     rating: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true
     },
     platforms: {

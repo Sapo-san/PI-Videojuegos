@@ -1,5 +1,6 @@
 const { conn } = require('./src/db.js');
 const axios = require("axios")
+const gameProcessor = require("./src/dataProcessors")
 
 // Constantes para HTTP requests
 const { API_KEY } = process.env;
@@ -9,42 +10,6 @@ const GENRE_URL = 'https://api.rawg.io/api/genres?page_size=20&key='
 const { Videogame, Genre } = require('./src/db.js');
 
 let gameList = [];
-
-// procesador de atributo de juego particular 
-function atributeProcessor(pfArray, attribute) {
-    let strArray = []
-    for (let index = 0; index < pfArray.length; index++) {
-        switch (attribute) {
-            case "platforms":
-                strArray.push(pfArray[index]["platform"]["slug"])
-                break;
-            case "genres":
-                strArray.push(pfArray[index]["id"])
-                break;
-            default:
-                console.log(pfArray[index])
-                break;
-        }
-      
-    }
-    return strArray
-}
-
-// procesa la info de un juego y devuelve Obj para ingresar a BD
-function gameProcessor(game) {
-    // si se modifica esta función, modificar tambien
-    // el modelo 
-    return {
-        web_id: game.id,
-        name: game.name,
-        description: null, 
-        release_date: game.released, 
-        background_image: game.background_image,
-        rating: game.rating,
-        platforms: atributeProcessor(game.platforms, "platforms").join(" "),
-        genres: atributeProcessor(game.genres, "genres")
-    }
-}
 
 async function insertAssociationsGamesGenres() {
     // Agregar asociaciones a cada juego
