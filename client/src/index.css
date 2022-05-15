@@ -27,3 +27,7 @@ a:hover {
   color: white;
 }
 
+p {
+  margin-block-start: .5em;
+  margin-block-end: .5em;
+}

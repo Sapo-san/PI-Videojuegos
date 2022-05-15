@@ -1,0 +1,90 @@
+
+.gameDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    background-color: #171a21;
+    border-radius: 10px;
+    margin-top: 1em;
+    padding: 1em;
+
+    max-width: 80vw;
+    
+}
+
+.gameImg {
+    max-width: 40vw;
+    border-radius: 1em;
+}
+
+.gameimgAndinfo {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    padding-top: 1em;
+}
+
+.gameInfo {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    text-align: left;
+}
+
+.gameDescription {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+
+    text-align: left;
+}
+
+
+.gameTitle {
+    font-weight: bolder;
+}
+
+.backLink {
+    padding: 0.7em;
+    background-color: #5e7c10;
+    border-radius: 2em;
+    transition: 0.5s;
+    text-decoration: none;
+    color: white
+}
+
+.backLink:hover {
+    background-color: #91ca16
+}
+
+@media only screen and (max-width: 600px) {
+
+    .gameimgAndinfo {
+        flex-direction: column;
+    }
+    
+    .gameImg {
+        max-width: 80vw;
+    }
+    
+    .gameDetailsContainer {
+        background-color: #171a21;
+        border-radius: 10px;
+        
+        max-width: 85vw;
+    }
+}
