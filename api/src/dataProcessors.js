@@ -22,12 +22,10 @@ function atributeProcessor(pfArray, attribute) {
 function gameProcessor(game) {
     // si se modifica esta función, modificar tambien
     // el modelo 
-
-    console.log(game)
     return {
         web_id: game.id,
         name: game.name,
-        description: game.description, 
+        description: game.description_raw, 
         release_date: game.released, 
         background_image: game.background_image,
         rating: game.rating,

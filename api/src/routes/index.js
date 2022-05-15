@@ -18,14 +18,12 @@ router.get("/videogames", (req, res, next) => {
     */
     if (!req.query.name) {
         // sin query
-        console.log("no hay query params")
         res.status(200).send("<h1>Videogames</h1>")
         next()
     } else {
         // con query 
         const keyword = req.query.name
 
-        console.log("hay query params")
         res.status(200).send(`<h1>Searching games with keyword: ${keyword}</h1>`)
         next()
     }
@@ -38,21 +36,43 @@ router.get("/videogames/:gameid", (req, res, next) => {
     Videogame.findByPk(gameId).then((data) => {
         
         if (data !== null) {
-            res.json(data.dataValues)
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAA")
-            next()
+            // Si está en nuestra BD, revisar si tiene descripción
+            if (data.dataValues.description !== null) {
+                // enviar desc como array para ponerla mas bonita en el front
+                data.dataValues.description = data.dataValues.description.split("\n")
+                res.json(data.dataValues)
+                next()
+            } else {
+                // si no tiene descripción, buscar en la api
+                axios.get("https://api.rawg.io/api/games/" + gameId + "?key=" + API_KEY).then((axiosdata) => {
+                    data.description = axiosdata.data.description_raw
+                    data.save()
+                    // enviar desc como array para ponerla mas bonita en el front
+                    data.dataValues.description = data.dataValues.description.split("\n")
+                    res.json(data.dataValues)
+                    next()
+                }).catch(err => {
+                    console.log(err)
+                })
+
+
+
+            }
+
+            
         } else {
             // Si no está en BD, buscar en API
             axios.get("https://api.rawg.io/api/games/" + gameId + "?key=" + API_KEY).then((apires) => {
-                console.log(apires.status)
 
                 let gameDetails = gameProcessor(apires.data)
-
-                console.log(">>>>>", gameDetails.description)
                 
+
                 Videogame.create(gameDetails).then(() => {
                     console.log("Juego con ID", gameDetails.web_id, "insertado en BD")
                 })
+
+                // enviar desc como array para ponerla mas bonita en el front
+                gameDetails.description = gameDetails.description.split("\n")
 
                 res.json(gameDetails)
                 next()
@@ -67,10 +87,9 @@ router.get("/videogames/:gameid", (req, res, next) => {
                 }
             })
         }
-        
-        
-        
-        
+    }).catch(err => {
+        res.sendStatus(500)
+        next()
     })
 })
 
