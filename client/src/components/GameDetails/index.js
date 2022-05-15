@@ -19,6 +19,7 @@ const GameDetails = ({ gameDetails, dispatch }) => {
         fetch(GAME_DETAILS_URL + id).then((res, err) => {
             if (res.status === 200) {
                 res.json().then((data) => {
+                    console.log(data)
                     dispatch(loadGameDetails(data))
                 })
             } else {
@@ -44,8 +45,9 @@ const GameDetails = ({ gameDetails, dispatch }) => {
         <div className='gameimgAndinfo'>
         <img src={gameDetails.background_image} alt="Portada" className='gameImg'></img>
             <div className='gameInfo' >
+
+                <p><b>Géneros:</b> {gameDetails.genres}</p>
                 <p><b>Disponible en:</b> {gameDetails.platforms}</p>
-                
                 <div className='gameDescription'>
                     {gameDetails.description.map((elem, index) => {
                         if (index === 0) {
@@ -55,7 +57,6 @@ const GameDetails = ({ gameDetails, dispatch }) => {
                         }
                     } )}
                 </div>
-                
                 <p><b>Rating:</b> {gameDetails.rating} / 5</p>
             </div>            
         </div>

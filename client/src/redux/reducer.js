@@ -14,7 +14,7 @@ export function gameStore(state = initialState, action) {
         case LOAD_GAME_INFO:
             return {
                 ...state,
-                gameInfo: action.data
+                gameInfo: action.payload
             }
     
         case LOAD_GAME_DETAILS:

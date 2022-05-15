@@ -1,7 +1,9 @@
 const { Router } = require('express');
-const { Videogame } = require('./../db.js')
+const { Videogame, Genre } = require('./../db.js')
 const gameProcessor = require("../dataProcessors")
-const axios = require("axios")
+const getGameDescription = require("./async-helper")
+const axios = require("axios");
+const { get } = require('../app.js');
 const API_KEY = process.env.API_KEY
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
@@ -32,52 +34,57 @@ router.get("/videogames", (req, res, next) => {
 router.get("/videogames/:gameid", (req, res, next) => {
     const gameId = req.params.gameid
 
-    // Buscamos en BD
-    Videogame.findByPk(gameId).then((data) => {
-        
-        if (data !== null) {
-            // Si está en nuestra BD, revisar si tiene descripción
-            if (data.dataValues.description !== null) {
-                // enviar desc como array para ponerla mas bonita en el front
-                data.dataValues.description = data.dataValues.description.split("\n")
-                res.json(data.dataValues)
-                next()
+    Videogame.findByPk(gameId).then((game) => {
+        // si esta en BD
+        if (game !== null) {
+
+            // revisar si tiene descripción
+            if (game.description !== null) {
+                game.description = game.description.split("\n")
             } else {
-                // si no tiene descripción, buscar en la api
-                axios.get("https://api.rawg.io/api/games/" + gameId + "?key=" + API_KEY).then((axiosdata) => {
-                    data.description = axiosdata.data.description_raw
-                    data.save()
-                    // enviar desc como array para ponerla mas bonita en el front
-                    data.dataValues.description = data.dataValues.description.split("\n")
-                    res.json(data.dataValues)
-                    next()
-                }).catch(err => {
-                    console.log(err)
-                })
-
-
-
+                game.description = getGameDescription(gameId).split("\n")
             }
 
-            
+            game.getGenres().then(genres => {
+                game.dataValues.genres = genres.map(elem => elem.dataValues.name).join(' ')
+                
+                res.json(game)
+                next()
+            })
+
+        // si no esta en BD
         } else {
             // Si no está en BD, buscar en API
             axios.get("https://api.rawg.io/api/games/" + gameId + "?key=" + API_KEY).then((apires) => {
 
                 let gameDetails = gameProcessor(apires.data)
                 
+                Videogame.create(gameDetails).then((game) => {
+                    console.log("Juego con ID", game.web_id, "insertado en BD")
 
-                Videogame.create(gameDetails).then(() => {
-                    console.log("Juego con ID", gameDetails.web_id, "insertado en BD")
+                    // insertar generos del juego en BD
+                    game.addGenres(gameDetails.genres)
+
+                    Genre.findAll().then(genres => {
+
+                        console.log(genres)
+
+                        gameDetails.genres = genres.filter(elem => {
+                            if (gameDetails.genres.includes(elem.web_id)) return true;
+                            return false
+                        }).map((elem) => {
+                            return elem.name
+                        }).join(' ')
+
+                        // enviar desc como array para ponerla mas bonita en el front
+                        gameDetails.description = gameDetails.description.split("\n")
+
+                        res.json(gameDetails)
+                        next()
+
+                    })
                 })
-
-                // enviar desc como array para ponerla mas bonita en el front
-                gameDetails.description = gameDetails.description.split("\n")
-
-                res.json(gameDetails)
-                next()
-
-            // Si no esta en API, 404
+                // Si no esta en API, 404
             }).catch((err) => {
                 if (err.request && err.request.res.statusCode === 404) {
                     res.sendStatus(404)
@@ -89,8 +96,13 @@ router.get("/videogames/:gameid", (req, res, next) => {
         }
     }).catch(err => {
         res.sendStatus(500)
+        console.log(err)
         next()
     })
+
+
+
+
 })
 
 router.get("/genres", (req, res, next) => {
