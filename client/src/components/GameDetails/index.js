@@ -39,6 +39,13 @@ const GameDetails = ({ gameDetails, dispatch }) => {
     }
 
     if (gameDetails && !finallyRendered) {
+        
+        if (gameDetails.release_date !== null) {
+            gameDetails.release_date = gameDetails.release_date.slice(0,10)
+        } else {
+            gameDetails.release_date = "?"
+        }
+        
         setContent(<div className='gameDetailsContainer'>
         <h1 className='gameTitle'>{gameDetails.name}</h1>
         
@@ -58,6 +65,8 @@ const GameDetails = ({ gameDetails, dispatch }) => {
                     } )}
                 </div>
                 <p><b>Rating:</b> {gameDetails.rating} / 5</p>
+                
+                <p><b>Fecha de lanzamiento:</b> {gameDetails.release_date}</p>
             </div>            
         </div>
         

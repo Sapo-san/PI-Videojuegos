@@ -66,9 +66,6 @@ router.get("/videogames/:gameid", (req, res, next) => {
                     game.addGenres(gameDetails.genres)
 
                     Genre.findAll().then(genres => {
-
-                        console.log(genres)
-
                         gameDetails.genres = genres.filter(elem => {
                             if (gameDetails.genres.includes(elem.web_id)) return true;
                             return false
