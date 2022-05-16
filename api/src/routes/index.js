@@ -3,7 +3,6 @@ const { Videogame, Genre } = require('./../db.js')
 const gameProcessor = require("../dataProcessors")
 const getGameDescription = require("./async-helper")
 const axios = require("axios");
-const { get } = require('../app.js');
 const API_KEY = process.env.API_KEY
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
@@ -103,8 +102,20 @@ router.get("/videogames/:gameid", (req, res, next) => {
 })
 
 router.get("/genres", (req, res, next) => {
-    res.status(200).send("<h1>Genres</h1>")
-    next()
+    
+    Genre.findAll().then(data => {
+        res.json(data.map(elem => {
+            return {
+                web_id: elem.dataValues.web_id,
+                name: elem.dataValues.name
+            }
+        }))
+        next()
+    }).catch(err => {
+        console.log(err)
+        res.sendStatus(500)
+        next()
+    })
 })
 
 router.post("/videogame", (req, res, next) => {

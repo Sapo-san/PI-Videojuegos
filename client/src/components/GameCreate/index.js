@@ -4,16 +4,87 @@ import { Link } from 'react-router-dom'
 
 import './gameCreate.css'
 
+
 const GameCreate = () => {
 
   const [formState, setFormState] = useState({
     name: null,
     description: null,
+    genres: [],
     release_date: null,
     rating: 2.5,
     platforms: null,
     background_image: ""
   })
+
+  const [availableGenres, setAvailableGenres] = useState(null)
+  const [selectedGenre, setSelectedGenre] = useState('')
+
+  const listAvaibleGenres = () => {
+    let listedAvaibleGenres = availableGenres.map(elem => {
+      if (formState.genres.includes(elem.web_id)) {
+        return null
+      } else {
+        return (<option value={elem.web_id} >{elem.name}</option>)
+      }
+    }).filter((elem) => {
+      if (elem) return true;
+      return false
+    })
+
+    if (listedAvaibleGenres.length === 0) {
+      return <option disabled hidden> - </option>
+    }
+
+    let genreToSelect = listedAvaibleGenres[0].props.value.toString()
+    if (genreToSelect && genreToSelect !== selectedGenre) {
+      setSelectedGenre(genreToSelect)
+    }
+    return listedAvaibleGenres
+  } 
+
+  var genreSelector = (<p>Géneros: Cargando...</p>)
+
+  if (availableGenres === null) {
+    fetch("http://localhost:3001/genres").then(res => {
+      res.json().then(data => {
+        setAvailableGenres(data)
+      })
+    })
+  } else {
+    genreSelector = (<>
+    <p>Géneros:</p>
+    <select value={selectedGenre} onChange={(e) => {
+      console.log("selected", e)
+      setSelectedGenre(e.target.value)
+    }
+    }>
+      {listAvaibleGenres()}
+    </select>
+    <button onClick={(e) => {
+      console.log("pressed", e)
+      e.preventDefault()
+      if (!formState.genres.includes(parseInt(selectedGenre))) {
+        // si NO incluye el genero seleccionado
+        setFormState({...formState, genres: [...formState.genres, parseInt(selectedGenre)]})
+      }
+    }}>Añadir Género</button>
+
+    <p>Géneros seleccionados:</p>
+    <ul className='genreList'>
+      {
+        availableGenres.map(elem => {
+          if (formState.genres.includes(elem.web_id)) {
+            return <li className='listedGenre' id={elem.web_id}>{elem.name}<button>X</button></li>
+          } else {
+            return null
+          }
+      })
+    }
+    </ul>
+
+    </>)
+  }
 
   return (
     <div className='gameCreateContainer'>
@@ -38,12 +109,7 @@ const GameCreate = () => {
               </input>
           </div>
           <div className='inputContainer'>
-              <p>Géneros:</p>
-              <input
-                type="text"
-                name="genres"
-                placeholder='Esto no funciona todavia xd'>
-              </input>
+              {genreSelector}
           </div>
           <div className='inputContainer'>
             <p>Descripción:</p>

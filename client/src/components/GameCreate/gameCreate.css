@@ -41,6 +41,16 @@
     align-items: flex-start;
 }
 
+.genreList {
+    list-style-type: none; /* Remove bullets */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margins */
+}
+
+.listedGenre {
+    float: left
+}
+
 img {
     max-width: 35vw;
     max-height: 60vh;
