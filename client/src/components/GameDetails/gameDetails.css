@@ -52,19 +52,11 @@
     text-align: left;
 }
 
-
 .gameTitle {
     font-weight: bolder;
 }
 
-.backLink {
-    padding: 0.7em;
-    background-color: #5e7c10;
-    border-radius: 2em;
-    transition: 0.5s;
-    text-decoration: none;
-    color: white
-}
+
 
 .backLink:hover {
     background-color: #91ca16

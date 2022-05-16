@@ -8,3 +8,12 @@
   align-content: center;
   justify-content: flex-start;
 }
+
+.backLink {
+  padding: 0.7em;
+  background-color: #5e7c10;
+  border-radius: 2em;
+  transition: 0.5s;
+  text-decoration: none;
+  color: white
+}
