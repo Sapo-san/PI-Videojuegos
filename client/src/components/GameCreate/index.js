@@ -48,14 +48,14 @@ const GameCreate = () => {
   const listSelectedGenres = () => {
     return availableGenres.map(elem => {
       if (formState.genres.includes(elem.web_id)) {
-        return <li className='listedGenre' key={elem.web_id}>{elem.name}<button id={elem.web_id} onClick={(e) => {
+        return <label className='listedGenre' key={elem.web_id}>{elem.name}<button className='deleteGenrebutton' id={elem.web_id} onClick={(e) => {
           e.preventDefault()
           let newList = formState.genres.filter((elem) => {
             if (elem === parseInt(e.target.id)) return false;
             return true
           })
           setFormState({...formState, genres: newList})
-        }}>X</button></li>
+        }}>X</button></label>
       } else {
         return null
       }
@@ -74,23 +74,25 @@ const GameCreate = () => {
       return (<p>Géneros: Cargando...</p>)
     } else {
       return (<>
-        <p>Géneros:</p>
+      <p>Géneros:</p>
+      <div className='displayGenreSelectorStuff'>
         <select value={selectedGenre[0]} onChange={(e) => setSelectedGenre([e.target.value,selectedGenre[1]])}>
           {listAvaibleGenres()}
         </select>
-    
-        <button onClick={(e) => {
+        <button className='addGenreButton' onClick={(e) => {
           e.preventDefault()
           if (!formState.genres.includes(parseInt(selectedGenre))) {
             // si NO incluye el genero seleccionado (evitar que se repitan generos en el form)
             setFormState({...formState, genres: [...formState.genres, parseInt(selectedGenre)]})
           }
         }}>Añadir Género</button>
+      </div>
+        
     
         <p>Géneros seleccionados:</p>
-        <ul className='genreList'>
+        <div className='genreList'>
           {listSelectedGenres()}
-        </ul>
+        </div>
       </>)
     }
   }

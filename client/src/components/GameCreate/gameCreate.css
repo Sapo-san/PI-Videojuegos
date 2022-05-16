@@ -11,7 +11,7 @@
     margin-top: 1em;
     padding: 1em;
 
-    width: 80vw;  
+    max-width: 80vw;  
 }
 
 .formContainer {
@@ -42,13 +42,50 @@
 }
 
 .genreList {
-    list-style-type: none; /* Remove bullets */
-    padding: 0; /* Remove padding */
-    margin: 0; /* Remove margins */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+.displayGenreSelectorStuff {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
 }
 
 .listedGenre {
-    float: left
+    background-color: black;
+    color: white;
+    border-radius: 3em;
+    padding: 0.5em;
+}
+
+.deleteGenrebutton {
+    border-radius: 2em;
+    color: white;
+    background-color: red;
+    border-color: red;
+    margin-left: 0.5em;
+}
+
+.addGenreButton {
+    margin: 0.5em;
+    padding:0.5em;
+    background-color: #5e7c10;
+    border-radius: 2em;
+    transition: 0.5s;
+    text-decoration: none;
+    color: white;
+}
+
+.addGenreButton:hover {
+    background-color: #91ca16
 }
 
 img {
@@ -73,9 +110,13 @@ textarea {
     padding: 0.5em;
 }
 
-button {
+
+
+
+select {
     margin: 0.5em;
-    border-color: #5e7c10;
+    padding:0.5em;
+    border-radius: 10px;
 }
 
 @media only screen and (max-width: 600px) {
