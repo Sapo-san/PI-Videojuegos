@@ -117,7 +117,7 @@ const GameCreate = () => {
     }
 
     if (formState.background_image.length > 255 ) {
-      foundErrors.genres = "El link a la imagen del juego no puede tener más de 255 carácteres"
+      foundErrors.background_image = "El link a la imagen del juego no puede tener más de 255 carácteres"
     } else {
       foundErrors.background_image = null
     }

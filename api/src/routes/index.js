@@ -1,8 +1,8 @@
 const { Router } = require('express');
 const { Videogame, Genre } = require('./../db.js')
 const gameProcessor = require('../dataProcessors')
-const getGameDescription = require('./async-helper')
-const generateNewGameID = require('./sync-helper')
+const { getGameDescription, generateNewGameID } = require('./async-helper')
+
 const axios = require("axios");
 const API_KEY = process.env.API_KEY
 // Importar todos los routers;
@@ -123,21 +123,26 @@ router.get("/genres", (req, res, next) => {
 router.post("/videogame", (req, res, next) => {
     console.log(req.body)
 
-    let gameInfo = {
-        ...req.body,
-        web_id: idGenerator.next().value
-    }
+    idGenerator.next().then(data => {
+        let gameInfo = {
+            ...req.body,
+            web_id: data.value
+        }
 
-    Videogame.create(gameInfo).then(game => {
-        game.addGenres(req.body.genres).then(() => {
-            res.json({ msg: "success", web_id: game.web_id })
+        Videogame.create(gameInfo).then(game => {
+            game.addGenres(req.body.genres).then(() => {
+                res.json({ msg: "success", web_id: game.web_id })
+                next()
+            })
+        }).catch(err => {
+            console.log("Error while Attempting to Create:", err)
+            res.sendStatus(500)
             next()
         })
-    }).catch(err => {
-        console.log(err)
-        res.sendStatus(500)
-        next()
+
     })
+
+    
 })
 
 module.exports = router;
