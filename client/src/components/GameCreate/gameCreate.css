@@ -88,6 +88,11 @@
     background-color: #91ca16
 }
 
+.warning {
+    color:orange;
+    font-weight: bold;
+}
+
 img {
     max-width: 35vw;
     max-height: 60vh;
@@ -109,8 +114,6 @@ textarea {
     width: calc(100% - 1em);
     padding: 0.5em;
 }
-
-
 
 
 select {
