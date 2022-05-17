@@ -1,12 +1,14 @@
 const { Router } = require('express');
 const { Videogame, Genre } = require('./../db.js')
-const gameProcessor = require("../dataProcessors")
-const getGameDescription = require("./async-helper")
+const gameProcessor = require('../dataProcessors')
+const getGameDescription = require('./async-helper')
+const generateNewGameID = require('./sync-helper')
 const axios = require("axios");
 const API_KEY = process.env.API_KEY
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
 
+var idGenerator = generateNewGameID()
 
 const router = Router();
 
@@ -119,8 +121,23 @@ router.get("/genres", (req, res, next) => {
 })
 
 router.post("/videogame", (req, res, next) => {
-    res.status(200).send("<h1>posted to create Game</h1>")
-    next()
+    console.log(req.body)
+
+    let gameInfo = {
+        ...req.body,
+        web_id: idGenerator.next().value
+    }
+
+    Videogame.create(gameInfo).then(game => {
+        game.addGenres(req.body.genres).then(() => {
+            res.json({ msg: "success", web_id: game.web_id })
+            next()
+        })
+    }).catch(err => {
+        console.log(err)
+        res.sendStatus(500)
+        next()
+    })
 })
 
 module.exports = router;

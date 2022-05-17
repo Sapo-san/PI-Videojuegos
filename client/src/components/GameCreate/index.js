@@ -1,8 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-
+import { useNavigate } from 'react-router-dom';
 import './gameCreate.css'
+
+const GAME_CREATE_URL =  'http://localhost:3001/videogame/'
 
 const GameCreate = () => {
 
@@ -28,6 +30,8 @@ const GameCreate = () => {
 
   const [availableGenres, setAvailableGenres] = useState(null)
   const [selectedGenre, setSelectedGenre] = useState(['',0]) // el cero es variable de control
+
+  let navigate = useNavigate()
 
   /** Retorna array de options (para el select) de los generos disponibles */
   const listAvaibleGenres = () => {
@@ -72,9 +76,7 @@ const GameCreate = () => {
     })
   }
 
-  const validateForm = () => {
-    console.log("state:",formState)
-    console.log("previous err:",formErrors)
+  const validateFormAndPostIfOK = () => {
 
     let foundErrors = {
       ...formErrors
@@ -120,12 +122,31 @@ const GameCreate = () => {
       foundErrors.background_image = null
     }
 
-    if (!foundErrors) {
+    if (!foundErrors.name && !foundErrors.genres
+      && !foundErrors.description && !foundErrors.release_date
+      && !foundErrors.platforms && !foundErrors.background_image) {
       //hacer post owo
       console.log("No hay errores wiii")
+      
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type" : "application/json" },
+        body: JSON.stringify(formState)
+      }
+
+      // validado correctamente, se postea
+      fetch(GAME_CREATE_URL, requestOptions)
+        .then(response => response.json()
+          .then(data => {
+            // éxito, redirigir a detalles del juego
+            console.log(data)
+            navigate("/game/" + data.web_id)
+          }))
+            // error, mostrar error en pantalla uwu
+            .catch(err => console.log(err))
+      
     } else {
       setFormErrors(foundErrors)
-      console.log("current err:",foundErrors)
     }
   } 
 
@@ -267,7 +288,6 @@ const GameCreate = () => {
               value={formState.rating}
               onChange={(event) => {
                 setFormState({...formState, rating: event.target.value})
-                //validateForm(event,'rating')
                 }}>
             </input>
           </div>
@@ -297,7 +317,7 @@ const GameCreate = () => {
           <button onClick={(e) => {
             e.preventDefault()
             clearValidation('all')
-            validateForm()
+            validateFormAndPostIfOK()
             }} className="backLink"> Crear Juego</button>
         </form>
       </div>
