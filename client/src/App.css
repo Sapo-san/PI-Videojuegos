@@ -9,11 +9,18 @@
   justify-content: flex-start;
 }
 
-.backLink {
+.button {
   padding: 0.7em;
   background-color: #5e7c10;
   border-radius: 2em;
+  border-color: #5e7c10;
+  border-style: none;
   transition: 0.5s;
   text-decoration: none;
   color: white
+}
+
+.button:hover {
+  background-color: #91ca16;
+  border-color: #91ca16;
 }

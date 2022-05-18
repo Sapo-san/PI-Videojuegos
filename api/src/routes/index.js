@@ -1,9 +1,14 @@
 const { Router } = require('express');
 const { Videogame, Genre } = require('./../db.js')
 const gameProcessor = require('../dataProcessors')
-const { getGameDescription, generateNewGameID } = require('./async-helper')
+const {
+        getGameDescription,
+        generateNewGameID,
+        getGamesGenres
+      } = require('./async-helper')
 
 const axios = require("axios");
+const e = require('express');
 const API_KEY = process.env.API_KEY
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
@@ -19,15 +24,30 @@ router.get("/videogames", (req, res, next) => {
     /*
         Con y sin query params!
     */
+
     if (!req.query.name) {
         // sin query
-        res.status(200).send("<h1>Videogames</h1>")
-        next()
+        Videogame.findAll({
+            attributes: ['web_id', 'name', 'background_image']
+        }).then(
+            games => {
+                getGamesGenres(Videogame, games).then(
+                    gamesList => {
+                        res.json(gamesList)
+                        next()
+                    }
+                )
+            }
+        ).catch(err => {
+            console.log(err)
+            res.sendStatus(500)
+            next()
+        })
     } else {
         // con query 
         const keyword = req.query.name
 
-        res.status(200).send(`<h1>Searching games with keyword: ${keyword}</h1>`)
+        res.json({ msg: "OK"})
         next()
     }
 })
@@ -39,19 +59,25 @@ router.get("/videogames/:gameid", (req, res, next) => {
         // si esta en BD
         if (game !== null) {
 
+            let gameToSend = { ...game.dataValues } 
             // revisar si tiene descripción
             if (game.description !== null) {
-                game.description = game.description.split("\n")
+                gameToSend.description = game.description.split("\n")
+                game.getGenres().then(genres => {
+                    gameToSend.genres = genres.map(elem => elem.dataValues.name).join(' ')
+                    res.json(gameToSend)
+                    next()
+                })
             } else {
-                game.description = getGameDescription(gameId).split("\n")
+                getGameDescription(gameId).then(descr => {
+                    gameToSend.description = descr
+                    game.getGenres().then(genres => {
+                        gameToSend.genres = genres.map(elem => elem.dataValues.name).join(' ')
+                        res.json(gameToSend)
+                        next()
+                    })
+                })
             }
-
-            game.getGenres().then(genres => {
-                game.dataValues.genres = genres.map(elem => elem.dataValues.name).join(' ')
-                
-                res.json(game)
-                next()
-            })
 
         // si no esta en BD
         } else {
@@ -121,7 +147,6 @@ router.get("/genres", (req, res, next) => {
 })
 
 router.post("/videogame", (req, res, next) => {
-    console.log(req.body)
 
     idGenerator.next().then(data => {
         let gameInfo = {

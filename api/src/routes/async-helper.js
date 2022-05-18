@@ -1,10 +1,42 @@
 const { Videogame } = require("../db")
+const axios = require("axios")
 
 const API_KEY = process.env.API_KEY
 
 async function getGameDescription(gameId) {
     gameData = await axios.get("https://api.rawg.io/api/games/" + gameId + "?key=" + API_KEY)
-    return gameData.description_raw
+    description = gameData.data.description_raw.split('\n')
+    return description
+}
+
+async function getGameGenres(gameId) {
+    
+    genres = await game.getGenres()
+    
+    return genres
+}
+
+async function getGamesGenres(Videogame, games) {
+    var gameList = []
+
+    for (let index = 0; index < games.length; index++) {
+        let game = await Videogame.findByPk(games[index].dataValues.web_id)
+        genres = await game.getGenres()
+        genres = genres.map(elem => {
+            return { name: elem.dataValues.name, web_id: elem.dataValues.web_id }
+        })
+
+        gameList.push({
+            web_id: games[index].dataValues.web_id,
+            name: games[index].dataValues.name,
+            background_img: games[index].dataValues.background_image,
+            genres: genres
+        })
+    }
+
+    return gameList
+
+
 }
 
 async function* generateNewGameID() {
@@ -42,4 +74,6 @@ async function* generateNewGameID() {
     }
 }
 
-module.exports = { getGameDescription, generateNewGameID }
+
+
+module.exports = { getGameDescription, generateNewGameID, getGamesGenres }

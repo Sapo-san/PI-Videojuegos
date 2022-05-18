@@ -12,7 +12,7 @@ const Landing = () => {
       alt="Imagen de videojuegos"
     />
     
-    <Link className="redirectToHome" to="home"><h3>Ir a Inicio</h3></Link>
+    <Link className="button" to="home"><h3>Ir a Inicio</h3></Link>
 
     <p>Este Proyecto consume <a href="https://api.rawg.io/docs/">RAWG API</a>.</p>
   </div>

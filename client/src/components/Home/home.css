@@ -1,0 +1,94 @@
+.homeContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    background-color: #171a21;
+    border-radius: 10px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: 1em;
+
+    width: 100%;
+    max-width: 80vw;  
+}
+
+.searchBarContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    width: 100%;
+}
+
+.searchBar {
+    margin: 0.25em;
+    max-width: 50vw;
+}
+
+.searchButton {
+    color: white;
+    border-radius: 2em;
+    border-color: #5c7e10;
+    background-color: #5c7e10;
+    padding: 0.7em;
+    transition: 0.5s;
+    min-width: 7em;
+
+    margin: 0.25em;
+
+    border-style: none;
+    border-image: none;
+}
+
+.searchButton:hover {
+    background-color: #91ca16;
+    border-color: #91ca16;
+}
+
+.displayerContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    width: 100%;
+    padding-top: 2em;
+    
+}
+
+.displayer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: flex-start;
+
+    background-color: #0b0d10;
+    border-radius: 1em;
+    min-height: 26em;
+
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+    width: 100%;
+    
+}
+
+
+@media only screen and (max-width: 600px) {
+
+    .homeContainer {
+        max-width: 85vw; 
+    }
+
+}

@@ -1,0 +1,18 @@
+.paginationContainer {
+    width: 10em;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 1em;
+    grid-row-gap: 0px;
+}
+
+.previous {
+    grid-column: 1;
+}
+.current {
+    grid-column: 2;
+}
+.next {
+    grid-column: 3;
+}

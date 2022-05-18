@@ -57,11 +57,6 @@
 }
 
 
-
-.backLink:hover {
-    background-color: #91ca16
-}
-
 @media only screen and (max-width: 600px) {
 
     .gameimgAndinfo {
@@ -76,6 +71,6 @@
         background-color: #171a21;
         border-radius: 10px;
         
-        max-width: 85vw;
+        max-width: 85vw; 
     }
 }
