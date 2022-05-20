@@ -31,6 +31,7 @@ const Home = () => {
   const dispatcher = useDispatch()
   const currentDisplayPage = useSelector( state => state.currentPage)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   function setCurrentDisplayPage(page) {
     dispatcher(setCurrentPage(page))
   }
@@ -56,9 +57,6 @@ const Home = () => {
 
     if (gamesToDisplay) {
           let filteredGames = [...gamesToDisplay];
-
-          console.log(filteredGames[0])
-
           if (gamesPostFilter === null) {
             // filtrar
             filteredGames = filterGamesByGenre(filteredGames, filters.genre)
@@ -71,6 +69,11 @@ const Home = () => {
             return null
 
           } else {
+            
+            if ((currentDisplayPage !== 1) && (lastUsedfilters.genre !== filters.genre || lastUsedfilters.origin !== filters.origin)) {
+              setCurrentDisplayPage(1)
+            }
+            
             // revisar si filtros actuales son los mismos que lastUsedFilters
             if (lastUsedfilters.genre !== filters.genre ||
               lastUsedfilters.origin !== filters.origin ||
@@ -82,7 +85,7 @@ const Home = () => {
 
           }
     }
-  },[dispatcher, filters, gamesPostFilter, gamesToDisplay, lastUsedfilters])
+  },[currentDisplayPage, dispatcher, filters, gamesPostFilter, gamesToDisplay, lastUsedfilters, setCurrentDisplayPage])
 
   function returnGamesToDiplay() {
     if (gamesPostFilter === null) {
@@ -105,7 +108,7 @@ const Home = () => {
     let games;
     let initialIndex = (currentDisplayPage-1)*15
     let finalIndex = (currentDisplayPage)*15
-    if (finalIndex > gamesPostFilter.length) {
+    if (finalIndex > gameList.length) {
       games = gameList.slice(initialIndex, gamesToDisplay.length)
     }
     else {
@@ -124,8 +127,8 @@ const Home = () => {
   }
 
   function displayPagination() {
-    if (!gamesToDisplay) return null;
-    return <Pagination currentPage={currentDisplayPage} totalAmountOfGames={gamesToDisplay.length} pageSet={setCurrentDisplayPage} />
+    if (!gamesPostFilter) return null;
+    return <Pagination currentPage={currentDisplayPage} totalAmountOfGames={gamesPostFilter.length} pageSet={setCurrentDisplayPage} />
   }
 
   function displaySelectors() {
