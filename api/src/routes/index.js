@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const { Videogame, Genre } = require('./../db.js')
 const gameProcessor = require('../dataProcessors')
+const { Sequelize } = require('sequelize')
+const Op = Sequelize.Op
 const {
         getGameDescription,
         generateNewGameID,
@@ -45,15 +47,47 @@ router.get("/videogames", (req, res, next) => {
         })
     } else {
         // con query 
-        const keyword = req.query.name
+        const name = req.query.name
+        const api = req.query.api
 
-        res.json({ msg: "OK"})
-        next()
+        if (api === "true") {
+            res.sendStatus(200)
+        } else {
+            // Sin buscar en API
+            Videogame.findAll({ where: {
+                name: {
+                    [Op.iLike]: "%" + name + "%"
+                }
+            }}).then(games => {
+                getGamesGenres(Videogame, games).then(gameList => {
+                    res.send(gameList)
+                    next()
+                })
+                
+            })
+        }
+
+        /* //res.json({ msg: "OK", keyword: keyword})
+        axios.get("https://api.rawg.io/api/games?search=" + keyword + "&key=" + API_KEY).then(
+            apires => {
+                    console.log(apires.data.results)
+                    res.sendStatus(200)
+                    next()
+                }
+        ).catch(err => {
+            console.log("Error: ", err)
+            res.sendStatus(500)
+            next()
+        }) */
+
+
     }
 })
 
 router.get("/videogames/:gameid", (req, res, next) => {
     const gameId = req.params.gameid
+
+    console.log("####################################################################")
 
     Videogame.findByPk(gameId).then((game) => {
         // si esta en BD

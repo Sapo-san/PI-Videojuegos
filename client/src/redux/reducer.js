@@ -9,7 +9,8 @@ import {
     SET_PAGE_FILTERS_ORDER_BY,
     SET_PAGE_FILTERS_ORDER_DIRECTION,
     LOAD_GENRES,
-    SET_POST_FILTER_GAMES
+    SET_POST_FILTER_GAMES,
+    SET_SEARCH_BAR_VALUE
 } from "./actions"
 
 const defaultFilters = {
@@ -26,7 +27,8 @@ const initialState = {
     filters: defaultFilters,
     lastUsedfilters: defaultFilters,
     gameInfoPostFilters: null,
-    genres: null
+    genres: null,
+    searchBarContent: ''
 }
 
 export function gameStore(state = initialState, action) {
@@ -113,6 +115,11 @@ export function gameStore(state = initialState, action) {
                 gameInfoPostFilters: action.payload[1]
             }
 
+        case SET_SEARCH_BAR_VALUE:
+            return {
+                ...state,
+                searchBarContent: action.payload
+            }
         default:
             return state;
     }

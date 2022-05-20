@@ -9,7 +9,6 @@ async function getGameDescription(gameId) {
     return description
 }
 
-
 async function getGamesGenres(Videogame, games) {
     var gameList = []
 

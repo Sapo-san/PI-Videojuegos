@@ -1,129 +1,40 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { loadGameInfo, setCurrentPage, setPostFilterGames } from '../../redux/actions'
-import './home.css'
-import GameCard from './GameCard'
+import { useSelector, useDispatch } from 'react-redux'
+import { setSearchBarValue, setCurrentPage, loadGameInfo, setPostFilterGames } from '../../redux/actions'
+import Displayer from './Displayer'
 import Pagination from './Pagination'
 import Selectors from './Selectors'
-import { filterGamesByGenre, filterGamesByOrigin, orderGamesBy } from './filterFunctions'
+import './home.css'
 
-
-const GAME_REQUEST_URL = "http://localhost:3001/videogames"
+const GAME_REQUEST_URL = "http://localhost:3001/videogames?name="
 
 const Home = () => {
-  /**
-   * Lección aprendida: en react, SIEMPRE separar
-   * la lógica del componente del renderizado del mismo
-   * 
-   * A.K.A. no hacer ninguna clase de setState DENTRO del HTML a retornar
-   * 
-   * Identificar este error:
-   * Cannot update a component while rendering a different component warning
-   * 
-   * */ 
 
-  const [searchBarValue, setSearchBarValue] = useState('')
-  const gamesToDisplay = useSelector( state => state.gameInfo )
-  const gamesPostFilter = useSelector( state => state.gameInfoPostFilters )
-  const filters = useSelector( state => state.filters )
-  const lastUsedfilters = useSelector( state => state.lastUsedfilters )
+  const searchBarValue = useSelector(state => state.searchBarContent)
+  const gamesPostFilter = useSelector( state => state.gameInfoPostFilters)
+  const currentDisplayPage = useSelector(state => state.currentPage)
   const dispatcher = useDispatch()
-  const currentDisplayPage = useSelector( state => state.currentPage)
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  function searchGames() {
+    fetch(GAME_REQUEST_URL+searchBarValue).then(
+      res => res.json().then(
+        data => {
+          console.log(data)
+          dispatcher(loadGameInfo(data))
+          dispatcher(setPostFilterGames([{
+            genre: "all", // Filtrar por género
+            origin: "all", // Filtrar por origen
+            orderBy: "rat", // Ordenar por...
+            orderDirection: "down" // Tipo de orden... (ascendente, descendente)
+        },null]))
+          setCurrentPage(1)
+        }
+      )
+    ).catch(err => console.log(err))
+  }
+
   function setCurrentDisplayPage(page) {
     dispatcher(setCurrentPage(page))
-  }
-
-  function getGamesToDisplay() {
-    if (!searchBarValue) {
-      fetch(GAME_REQUEST_URL).then(res => res.json().then(
-        data => {
-          console.log(data[0])
-          dispatcher(loadGameInfo(data))
-        }
-      )).catch(err => {
-        console.log(err)
-        return (<h1>Error 500, ver consola para mas detalles</h1>)
-      })
-      
-    }
-  }
-
-  if (!gamesToDisplay) getGamesToDisplay();
-
-  useEffect(() => {
-
-    if (gamesToDisplay) {
-          let filteredGames = [...gamesToDisplay];
-          if (gamesPostFilter === null) {
-            // filtrar
-            filteredGames = filterGamesByGenre(filteredGames, filters.genre)
-            filteredGames = filterGamesByOrigin(filteredGames, filters.origin)
-            filteredGames = orderGamesBy(filteredGames, filters.orderBy, filters.orderDirection)
-
-            // setear lastUsedFilters y gamesPostFilter
-            dispatcher(setPostFilterGames([filters, filteredGames]))
-
-            return null
-
-          } else {
-            
-            if ((currentDisplayPage !== 1) && (lastUsedfilters.genre !== filters.genre || lastUsedfilters.origin !== filters.origin)) {
-              setCurrentDisplayPage(1)
-            }
-            
-            // revisar si filtros actuales son los mismos que lastUsedFilters
-            if (lastUsedfilters.genre !== filters.genre ||
-              lastUsedfilters.origin !== filters.origin ||
-              lastUsedfilters.orderBy !== filters.orderBy ||
-              lastUsedfilters.orderDirection !== filters.orderDirection) {
-                // si no lo son, setear gamesPostFilter como null
-                dispatcher(setPostFilterGames([lastUsedfilters, null]))
-              }
-
-          }
-    }
-  },[currentDisplayPage, dispatcher, filters, gamesPostFilter, gamesToDisplay, lastUsedfilters, setCurrentDisplayPage])
-
-  function returnGamesToDiplay() {
-    if (gamesPostFilter === null) {
-      return (<h1>Cargando...</h1>)
-    } else {
-      // revisar si filtros actuales son los mismos que lastUsedFilters
-      if (lastUsedfilters.genre === filters.genre &&
-        lastUsedfilters.origin === filters.origin &&
-        lastUsedfilters.orderBy === filters.orderBy &&
-        lastUsedfilters.orderDirection === filters.orderDirection) {
-          return paginatedGames(gamesPostFilter)
-        } 
-
-    }
-  }
-
-  function paginatedGames(gameList) {
-    
-    // 15 juegos por página
-    let games;
-    let initialIndex = (currentDisplayPage-1)*15
-    let finalIndex = (currentDisplayPage)*15
-    if (finalIndex > gameList.length) {
-      games = gameList.slice(initialIndex, gamesToDisplay.length)
-    }
-    else {
-      games = gameList.slice(initialIndex, finalIndex)
-    }
-
-    return games.map(game => {
-      return <GameCard
-                key={game.web_id}
-                id={game.web_id}
-                name={game.name}
-                img={game.background_img}
-                genres={game.genres}
-             />
-    })
   }
 
   function displayPagination() {
@@ -132,7 +43,7 @@ const Home = () => {
   }
 
   function displaySelectors() {
-    if (!gamesToDisplay) return null;
+    if (!gamesPostFilter) return null;
     return <Selectors/>
   }
   
@@ -142,8 +53,11 @@ const Home = () => {
 
     <h3>Buscador de juegos:</h3>
     <div className='searchBarContainer'>
-      <input value={searchBarValue} onChange={(e) => setSearchBarValue(e.target.value.trim())} className='searchBar' type="text" placeholder='Título del juego' ></input>
-      <button className='searchButton' onClick={(e) => e.preventDefault()}>Buscar</button>
+      <input value={searchBarValue} onChange={(e) => dispatcher(setSearchBarValue(e.target.value))} className='searchBar' type="text" placeholder='Título del juego' ></input>
+      <button className='searchButton' onClick={(e) =>{
+        e.preventDefault()
+        searchGames()
+      }}>Buscar</button>
     </div>
 
     <div className='displayerContainer'>
@@ -152,15 +66,11 @@ const Home = () => {
 
       {displayPagination()}
 
-      <div className='displayer'>
-        {returnGamesToDiplay()}
-      </div>
+      <Displayer setCurrentPage={setCurrentDisplayPage}/>
       
       {displayPagination()}
       
     </div>
-
-
   </div>)
 }
 
