@@ -28,7 +28,7 @@ router.get("/videogames", (req, res, next) => {
     if (!req.query.name) {
         // sin query
         Videogame.findAll({
-            attributes: ['web_id', 'name', 'background_image']
+            attributes: ['web_id', 'name', 'background_image', 'rating']
         }).then(
             games => {
                 getGamesGenres(Videogame, games).then(
@@ -153,6 +153,8 @@ router.post("/videogame", (req, res, next) => {
             ...req.body,
             web_id: data.value
         }
+
+        gameInfo.name = gameInfo.name.trim().charAt(0).toUpperCase() + gameInfo.name.trim().slice(1);
 
         Videogame.create(gameInfo).then(game => {
             game.addGenres(req.body.genres).then(() => {

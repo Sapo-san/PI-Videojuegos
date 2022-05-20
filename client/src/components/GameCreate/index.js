@@ -1,10 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
+import { loadGenres, reLoadGameInfo } from '../../redux/actions';
 import './gameCreate.css'
 
 const GAME_CREATE_URL =  'http://localhost:3001/videogame/'
+const GAME_REQUEST_URL = "http://localhost:3001/videogames"
 
 const GameCreate = () => {
 
@@ -28,7 +31,8 @@ const GameCreate = () => {
     background_image: null
   })
 
-  const [availableGenres, setAvailableGenres] = useState(null)
+  const availableGenres = useSelector(state => state.genres)
+  const dispatcher = useDispatch()
   const [selectedGenre, setSelectedGenre] = useState(['',0]) // el cero es variable de control
 
   let navigate = useNavigate()
@@ -39,7 +43,7 @@ const GameCreate = () => {
       if (formState.genres.includes(elem.web_id)) {
         return null
       } else {
-        return (<option value={elem.web_id} >{elem.name}</option>)
+        return (<option value={elem.web_id} key={"genre"+elem.web_id} >{elem.name}</option>)
       }
     }).filter((elem) => {
       if (elem) return true;
@@ -138,8 +142,16 @@ const GameCreate = () => {
       fetch(GAME_CREATE_URL, requestOptions)
         .then(response => response.json()
           .then(data => {
-            // éxito, redirigir a detalles del juego
-            console.log(data)
+            // éxito
+            // recargar gamesToDisplay
+            fetch(GAME_REQUEST_URL).then(res => res.json().then(
+              data => {
+                dispatcher(reLoadGameInfo(data))
+              }
+            )).catch(err => {
+              console.log(err)
+            })
+            // redirigir a detalles del juego
             navigate("/game/" + data.web_id)
           }))
             // error, mostrar error en pantalla uwu
@@ -194,7 +206,8 @@ const GameCreate = () => {
     if (availableGenres === null) {
       fetch("http://localhost:3001/genres").then(res => {
         res.json().then(data => {
-          setAvailableGenres(data)
+          //setAvailableGenres(data)
+          dispatcher(loadGenres(data))
         })
       })
       return (<p>Géneros: Cargando...</p>)
@@ -314,15 +327,15 @@ const GameCreate = () => {
                 }} placeholder='http://link-a/una/imagen.png'>
             </input>
           </div>
-          <button onClick={(e) => {
+          <button className="button margin-on-top" onClick={(e) => {
             e.preventDefault()
             clearValidation('all')
             validateFormAndPostIfOK()
-            }} className="backLink"> Crear Juego</button>
+            }}> Crear Juego</button>
         </form>
       </div>
 
-      <Link className="backLink" to="/home">Volver a Inicio</Link>
+      <Link className="button" to="/home">Volver a Inicio</Link>
     </div>
   )
 }

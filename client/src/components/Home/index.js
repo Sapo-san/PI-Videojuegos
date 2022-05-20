@@ -1,17 +1,33 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { loadGameInfo, setCurrentPage } from '../../redux/actions'
+import { loadGameInfo, setCurrentPage, setPostFilterGames } from '../../redux/actions'
 import './home.css'
 import GameCard from './GameCard'
 import Pagination from './Pagination'
+import Selectors from './Selectors'
+import { filterGamesByGenre, filterGamesByOrigin, orderGamesBy } from './filterFunctions'
+
 
 const GAME_REQUEST_URL = "http://localhost:3001/videogames"
 
 const Home = () => {
+  /**
+   * Lección aprendida: en react, SIEMPRE separar
+   * la lógica del componente del renderizado del mismo
+   * 
+   * A.K.A. no hacer ninguna clase de setState DENTRO del HTML a retornar
+   * 
+   * Identificar este error:
+   * Cannot update a component while rendering a different component warning
+   * 
+   * */ 
 
   const [searchBarValue, setSearchBarValue] = useState('')
   const gamesToDisplay = useSelector( state => state.gameInfo )
+  const gamesPostFilter = useSelector( state => state.gameInfoPostFilters )
+  const filters = useSelector( state => state.filters )
+  const lastUsedfilters = useSelector( state => state.lastUsedfilters )
   const dispatcher = useDispatch()
   const currentDisplayPage = useSelector( state => state.currentPage)
 
@@ -19,11 +35,11 @@ const Home = () => {
     dispatcher(setCurrentPage(page))
   }
 
-
   function getGamesToDisplay() {
     if (!searchBarValue) {
       fetch(GAME_REQUEST_URL).then(res => res.json().then(
         data => {
+          console.log(data[0])
           dispatcher(loadGameInfo(data))
         }
       )).catch(err => {
@@ -36,20 +52,64 @@ const Home = () => {
 
   if (!gamesToDisplay) getGamesToDisplay();
 
-  function returnGamesToDiplay(page) {
-    if (!gamesToDisplay) {
-      return (<h1>Cargando...</h1>)
-    }
+  useEffect(() => {
 
+    if (gamesToDisplay) {
+          let filteredGames = [...gamesToDisplay];
+
+          console.log(filteredGames[0])
+
+          if (gamesPostFilter === null) {
+            // filtrar
+            filteredGames = filterGamesByGenre(filteredGames, filters.genre)
+            filteredGames = filterGamesByOrigin(filteredGames, filters.origin)
+            filteredGames = orderGamesBy(filteredGames, filters.orderBy, filters.orderDirection)
+
+            // setear lastUsedFilters y gamesPostFilter
+            dispatcher(setPostFilterGames([filters, filteredGames]))
+
+            return null
+
+          } else {
+            // revisar si filtros actuales son los mismos que lastUsedFilters
+            if (lastUsedfilters.genre !== filters.genre ||
+              lastUsedfilters.origin !== filters.origin ||
+              lastUsedfilters.orderBy !== filters.orderBy ||
+              lastUsedfilters.orderDirection !== filters.orderDirection) {
+                // si no lo son, setear gamesPostFilter como null
+                dispatcher(setPostFilterGames([lastUsedfilters, null]))
+              }
+
+          }
+    }
+  },[dispatcher, filters, gamesPostFilter, gamesToDisplay, lastUsedfilters])
+
+  function returnGamesToDiplay() {
+    if (gamesPostFilter === null) {
+      return (<h1>Cargando...</h1>)
+    } else {
+      // revisar si filtros actuales son los mismos que lastUsedFilters
+      if (lastUsedfilters.genre === filters.genre &&
+        lastUsedfilters.origin === filters.origin &&
+        lastUsedfilters.orderBy === filters.orderBy &&
+        lastUsedfilters.orderDirection === filters.orderDirection) {
+          return paginatedGames(gamesPostFilter)
+        } 
+
+    }
+  }
+
+  function paginatedGames(gameList) {
+    
     // 15 juegos por página
     let games;
-    let initialIndex = (page-1)*15
-    let finalIndex = (page)*15
-    if (finalIndex > gamesToDisplay.length) {
-      games = gamesToDisplay.slice(initialIndex, gamesToDisplay.length)
+    let initialIndex = (currentDisplayPage-1)*15
+    let finalIndex = (currentDisplayPage)*15
+    if (finalIndex > gamesPostFilter.length) {
+      games = gameList.slice(initialIndex, gamesToDisplay.length)
     }
     else {
-      games = gamesToDisplay.slice(initialIndex, finalIndex)
+      games = gameList.slice(initialIndex, finalIndex)
     }
 
     return games.map(game => {
@@ -61,12 +121,16 @@ const Home = () => {
                 genres={game.genres}
              />
     })
-
   }
 
   function displayPagination() {
     if (!gamesToDisplay) return null;
     return <Pagination currentPage={currentDisplayPage} totalAmountOfGames={gamesToDisplay.length} pageSet={setCurrentDisplayPage} />
+  }
+
+  function displaySelectors() {
+    if (!gamesToDisplay) return null;
+    return <Selectors/>
   }
   
   return (<div className="homeContainer">
@@ -81,12 +145,12 @@ const Home = () => {
 
     <div className='displayerContainer'>
 
-      <div className='displayerControls'>Botones de ordenación, filtrado por genero y api/creado</div>
+      {displaySelectors()}
 
       {displayPagination()}
 
       <div className='displayer'>
-        {returnGamesToDiplay(currentDisplayPage)}
+        {returnGamesToDiplay()}
       </div>
       
       {displayPagination()}
@@ -94,9 +158,7 @@ const Home = () => {
     </div>
 
 
-  </div>
-    
-  )
+  </div>)
 }
 
 export default Home

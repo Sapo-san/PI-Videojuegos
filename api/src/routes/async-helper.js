@@ -9,12 +9,6 @@ async function getGameDescription(gameId) {
     return description
 }
 
-async function getGameGenres(gameId) {
-    
-    genres = await game.getGenres()
-    
-    return genres
-}
 
 async function getGamesGenres(Videogame, games) {
     var gameList = []
@@ -30,12 +24,12 @@ async function getGamesGenres(Videogame, games) {
             web_id: games[index].dataValues.web_id,
             name: games[index].dataValues.name,
             background_img: games[index].dataValues.background_image,
-            genres: genres
+            genres: genres,
+            rating: games[index].dataValues.rating
         })
     }
 
     return gameList
-
 
 }
 
