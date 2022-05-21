@@ -22,7 +22,7 @@ async function getGamesGenres(Videogame, games) {
         gameList.push({
             web_id: games[index].dataValues.web_id,
             name: games[index].dataValues.name,
-            background_img: games[index].dataValues.background_image,
+            background_image: games[index].dataValues.background_image,
             genres: genres,
             rating: games[index].dataValues.rating
         })

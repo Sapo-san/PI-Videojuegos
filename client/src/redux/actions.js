@@ -10,6 +10,7 @@ export const SET_PAGE_FILTERS_ORDER_DIRECTION = 'SET_PAGE_FILTERS_ORDER_DIRECTIO
 export const LOAD_GENRES = 'LOAD_GENRES'
 export const SET_POST_FILTER_GAMES = 'SET_POST_FILTER_GAMES'
 export const SET_SEARCH_BAR_VALUE = 'SET_SEARCH_BAR_VALUE'
+export const SHOW_EXTRA_SEARCH_BUTTON = "SHOW_EXTRA_SEARCH_BUTTON"
 
 // ACTION CREATORS
 export function loadGameInfo(data) {
@@ -86,6 +87,13 @@ export function setPostFilterGames(data) {
 export function setSearchBarValue(data) {
     return {
         type: SET_SEARCH_BAR_VALUE,
+        payload: data
+    }
+}
+
+export function setExtraSearchButton(data) {
+    return {
+        type: SHOW_EXTRA_SEARCH_BUTTON,
         payload: data
     }
 }

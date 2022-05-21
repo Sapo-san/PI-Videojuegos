@@ -23,9 +23,6 @@ const router = Router();
 // Ejemplo: router.use('/auth', authRouter);
 
 router.get("/videogames", (req, res, next) => {
-    /*
-        Con y sin query params!
-    */
 
     if (!req.query.name) {
         // sin query
@@ -51,7 +48,28 @@ router.get("/videogames", (req, res, next) => {
         const api = req.query.api
 
         if (api === "true") {
-            res.sendStatus(200)
+            // Con buscar en API
+            axios.get("https://api.rawg.io/api/games?search=" + name + "&key=" + API_KEY).then(
+                apires => {
+                    if (apires.data.results.length === 0) {
+                        res.sendStatus(404)
+                        next()
+                    } else {
+                        let results = apires.data.results.map(elem => {
+                            return gameProcessor(elem)
+                        })
+
+                        res.json(results)
+                        next()
+                    }
+                }
+            )
+            
+            
+
+            
+
+
         } else {
             // Sin buscar en API
             Videogame.findAll({ where: {
@@ -63,7 +81,6 @@ router.get("/videogames", (req, res, next) => {
                     res.send(gameList)
                     next()
                 })
-                
             })
         }
 
@@ -86,8 +103,6 @@ router.get("/videogames", (req, res, next) => {
 
 router.get("/videogames/:gameid", (req, res, next) => {
     const gameId = req.params.gameid
-
-    console.log("####################################################################")
 
     Videogame.findByPk(gameId).then((game) => {
         // si esta en BD

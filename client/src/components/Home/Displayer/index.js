@@ -71,7 +71,7 @@ const Displayer = ({ setCurrentPage }) => {
                     key={game.web_id}
                     id={game.web_id}
                     name={game.name}
-                    img={game.background_img}
+                    img={game.background_image}
                     genres={game.genres}
                  />
         })

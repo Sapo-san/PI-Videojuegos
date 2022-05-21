@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setSearchBarValue, setCurrentPage, loadGameInfo, setPostFilterGames } from '../../redux/actions'
+import { setSearchBarValue, setCurrentPage, loadGameInfo, setPostFilterGames, setExtraSearchButton } from '../../redux/actions'
 import Displayer from './Displayer'
 import Pagination from './Pagination'
 import Selectors from './Selectors'
@@ -11,26 +11,62 @@ const GAME_REQUEST_URL = "http://localhost:3001/videogames?name="
 const Home = () => {
 
   const searchBarValue = useSelector(state => state.searchBarContent)
+  const extraSearch = useSelector(state => state.showExtraSearchButton)
   const gamesPostFilter = useSelector( state => state.gameInfoPostFilters)
   const currentDisplayPage = useSelector(state => state.currentPage)
   const dispatcher = useDispatch()
 
-  function searchGames() {
-    fetch(GAME_REQUEST_URL+searchBarValue).then(
-      res => res.json().then(
-        data => {
-          console.log(data)
-          dispatcher(loadGameInfo(data))
-          dispatcher(setPostFilterGames([{
-            genre: "all", // Filtrar por género
-            origin: "all", // Filtrar por origen
-            orderBy: "rat", // Ordenar por...
-            orderDirection: "down" // Tipo de orden... (ascendente, descendente)
-        },null]))
-          setCurrentPage(1)
-        }
+  function searchGames(api) {
+    if (api) {
+      fetch(GAME_REQUEST_URL+searchBarValue+"&api=true").then(
+        res => res.json().then(
+          data => {
+            dispatcher(loadGameInfo(data))
+            dispatcher(setPostFilterGames([{
+              genre: "all", // Filtrar por género
+              origin: "all", // Filtrar por origen
+              orderBy: "rat", // Ordenar por...
+              orderDirection: "down" // Tipo de orden... (ascendente, descendente)
+          },null]))
+            setCurrentPage(1)
+            dispatcher(setExtraSearchButton(false))
+          }
+        ).catch(err => {
+          console.log(err)
+          return (<h1>F no hay na</h1>)
+        })
+      ).catch(err => console.log(err))
+    } else {
+      fetch(GAME_REQUEST_URL+searchBarValue).then(
+        res => res.json().then(
+          data => {
+            dispatcher(loadGameInfo(data))
+            dispatcher(setPostFilterGames([{
+              genre: "all", // Filtrar por género
+              origin: "all", // Filtrar por origen
+              orderBy: "rat", // Ordenar por...
+              orderDirection: "down" // Tipo de orden... (ascendente, descendente)
+          },null]))
+            setCurrentPage(1)
+            dispatcher(setExtraSearchButton(true))
+          }
+        )
+      ).catch(err => console.log(err))
+    }
+  }
+
+  function showExtraSearchButton() {
+    if (extraSearch && searchBarValue !== '') {
+      return (
+        <div>
+          <h3>¿No encuentras lo que buscas?</h3>
+          <button className='searchButton' onClick={(e) =>{
+            e.preventDefault()
+            searchGames(true)
+          }}>Buscar en RAWG</button>
+        </div>
       )
-    ).catch(err => console.log(err))
+    }
   }
 
   function setCurrentDisplayPage(page) {
@@ -59,6 +95,8 @@ const Home = () => {
         searchGames()
       }}>Buscar</button>
     </div>
+
+    {showExtraSearchButton()}
 
     <div className='displayerContainer'>
 
