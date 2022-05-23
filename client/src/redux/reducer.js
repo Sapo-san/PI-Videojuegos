@@ -11,7 +11,8 @@ import {
     LOAD_GENRES,
     SET_POST_FILTER_GAMES,
     SET_SEARCH_BAR_VALUE,
-    SHOW_EXTRA_SEARCH_BUTTON
+    SHOW_EXTRA_SEARCH_BUTTON,
+    RESET_PAGE_FILTERS
 } from "./actions"
 
 const defaultFilters = {
@@ -111,11 +112,20 @@ export function gameStore(state = initialState, action) {
             }
         
         case SET_POST_FILTER_GAMES:
-            return {
-                ...state,
-                lastUsedfilters: action.payload[0],
-                gameInfoPostFilters: action.payload[1]
+            if (action.payload[0]) {
+                return {
+                    ...state,
+                    lastUsedfilters: action.payload[0],
+                    gameInfoPostFilters: action.payload[1]
+                }
+            } else {
+                return {
+                    ...state,
+                    gameInfoPostFilters: action.payload[1]
+                }
             }
+        
+            
 
         case SET_SEARCH_BAR_VALUE:
             return {
@@ -129,6 +139,12 @@ export function gameStore(state = initialState, action) {
                 showExtraSearchButton: action.payload
             }
 
+        case RESET_PAGE_FILTERS:
+            return {
+                ...state,
+                filters: defaultFilters,
+                lastUsedfilters: defaultFilters,
+            }
         default:
             return state;
     }

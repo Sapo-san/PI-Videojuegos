@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setSearchBarValue, setCurrentPage, loadGameInfo, setPostFilterGames, setExtraSearchButton } from '../../redux/actions'
+import { setSearchBarValue, setCurrentPage, loadGameInfo, setPostFilterGames, setExtraSearchButton, resetPageFilters } from '../../redux/actions'
 import Displayer from './Displayer'
 import Pagination from './Pagination'
 import Selectors from './Selectors'
@@ -22,32 +22,23 @@ const Home = () => {
         res => res.json().then(
           data => {
             dispatcher(loadGameInfo(data))
-            dispatcher(setPostFilterGames([{
-              genre: "all", // Filtrar por género
-              origin: "all", // Filtrar por origen
-              orderBy: "rat", // Ordenar por...
-              orderDirection: "down" // Tipo de orden... (ascendente, descendente)
-          },null]))
-            setCurrentPage(1)
+            dispatcher(resetPageFilters())
+            setCurrentDisplayPage(1)
+            dispatcher(setPostFilterGames([null,null]))
             dispatcher(setExtraSearchButton(false))
           }
         ).catch(err => {
           console.log(err)
-          return (<h1>F no hay na</h1>)
         })
       ).catch(err => console.log(err))
     } else {
       fetch(GAME_REQUEST_URL+searchBarValue).then(
         res => res.json().then(
           data => {
+            dispatcher(resetPageFilters())
+            setCurrentDisplayPage(1)
             dispatcher(loadGameInfo(data))
-            dispatcher(setPostFilterGames([{
-              genre: "all", // Filtrar por género
-              origin: "all", // Filtrar por origen
-              orderBy: "rat", // Ordenar por...
-              orderDirection: "down" // Tipo de orden... (ascendente, descendente)
-          },null]))
-            setCurrentPage(1)
+            dispatcher(setPostFilterGames([null,null]))
             dispatcher(setExtraSearchButton(true))
           }
         )

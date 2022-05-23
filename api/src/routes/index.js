@@ -59,8 +59,32 @@ router.get("/videogames", (req, res, next) => {
                             return gameProcessor(elem)
                         })
 
-                        res.json(results)
-                        next()
+                        Genre.findAll().then(genres => {
+                            results = results.map(game => {
+
+
+                                let corresponding_genres = genres.filter( g => {
+                                    if (game.genres.includes(g.dataValues.web_id)) return true;
+                                    return false
+                                })
+
+
+                                game.genres = corresponding_genres.map(genre => {
+                                    return {
+                                        name: genre.dataValues.name,
+                                        web_id: genre.dataValues.web_id
+                                    }
+                                })
+
+                                return game
+                            })
+
+                            res.json(results)
+                            next()
+
+                        })
+
+                        
                     }
                 }
             )

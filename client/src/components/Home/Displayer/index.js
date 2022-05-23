@@ -47,7 +47,12 @@ const Displayer = ({ setCurrentPage }) => {
             lastUsedfilters.origin === filters.origin &&
             lastUsedfilters.orderBy === filters.orderBy &&
             lastUsedfilters.orderDirection === filters.orderDirection) {
-              return paginatedGames(gamesPostFilter)
+              if ( gamesPostFilter.length <= gamesToDisplay.length ) {
+                return paginatedGames(gamesPostFilter)
+              } else {
+                return (<h1>Cargando...</h1>)
+              }
+              
             } 
     
         }
@@ -77,40 +82,38 @@ const Displayer = ({ setCurrentPage }) => {
         })
     }
   
-
     if (!gamesToDisplay) getGamesToDisplay();
 
     useEffect(() => {
-
         if (gamesToDisplay) {
-              let filteredGames = [...gamesToDisplay];
-              if (gamesPostFilter === null) {
-                // filtrar
-                filteredGames = filterGamesByGenre(filteredGames, filters.genre)
-                filteredGames = filterGamesByOrigin(filteredGames, filters.origin)
-                filteredGames = orderGamesBy(filteredGames, filters.orderBy, filters.orderDirection)
-    
-                // setear lastUsedFilters y gamesPostFilter
-                dispatcher(setPostFilterGames([filters, filteredGames]))
-    
-                return null
-    
-              } else {
-                
-                if ((currentDisplayPage !== 1) && (lastUsedfilters.genre !== filters.genre || lastUsedfilters.origin !== filters.origin)) {
-                  setCurrentPage(1)
-                }
-                
-                // revisar si filtros actuales son los mismos que lastUsedFilters
-                if (lastUsedfilters.genre !== filters.genre ||
-                  lastUsedfilters.origin !== filters.origin ||
-                  lastUsedfilters.orderBy !== filters.orderBy ||
-                  lastUsedfilters.orderDirection !== filters.orderDirection) {
-                    // si no lo son, setear gamesPostFilter como null
-                    dispatcher(setPostFilterGames([lastUsedfilters, null]))
-                  }
-    
+          let filteredGames = [...gamesToDisplay];
+          if (gamesPostFilter === null) {
+            // filtrar
+            filteredGames = filterGamesByGenre(filteredGames, filters.genre)
+            filteredGames = filterGamesByOrigin(filteredGames, filters.origin)
+            filteredGames = orderGamesBy(filteredGames, filters.orderBy, filters.orderDirection)
+
+            // setear lastUsedFilters y gamesPostFilter
+            dispatcher(setPostFilterGames([filters, filteredGames]))
+
+            return null
+
+          } else {
+            
+            if ((currentDisplayPage !== 1) && (lastUsedfilters.genre !== filters.genre || lastUsedfilters.origin !== filters.origin)) {
+              setCurrentPage(1)
+            }
+            
+            // revisar si filtros actuales son los mismos que lastUsedFilters
+            if (lastUsedfilters.genre !== filters.genre ||
+              lastUsedfilters.origin !== filters.origin ||
+              lastUsedfilters.orderBy !== filters.orderBy ||
+              lastUsedfilters.orderDirection !== filters.orderDirection) {
+                // si no lo son, setear gamesPostFilter como null
+                dispatcher(setPostFilterGames([lastUsedfilters, null]))
               }
+
+          }
         }
       },[currentDisplayPage, dispatcher, filters, gamesPostFilter, gamesToDisplay, lastUsedfilters, setCurrentPage])
     
