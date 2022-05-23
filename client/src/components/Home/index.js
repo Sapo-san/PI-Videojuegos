@@ -29,6 +29,7 @@ const Home = () => {
           }
         ).catch(err => {
           console.log(err)
+          dispatcher(setExtraSearchButton(false))
         })
       ).catch(err => console.log(err))
     } else {
@@ -42,7 +43,10 @@ const Home = () => {
             dispatcher(setExtraSearchButton(true))
           }
         )
-      ).catch(err => console.log(err))
+      ).catch(err => {
+        console.log(err)
+        dispatcher(setExtraSearchButton(false))
+      })
     }
   }
 

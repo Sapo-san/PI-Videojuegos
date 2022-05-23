@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { filterGamesByGenre, filterGamesByOrigin, orderGamesBy } from '../filterFunctions'
 import { setPostFilterGames, loadGameInfo } from '../../../redux/actions'
+import './displayer.css'
 
 const GAME_REQUEST_URL = "http://localhost:3001/videogames"
 

@@ -39,3 +39,10 @@ select {
     min-width: 14em;
 }
 
+@media only screen and (max-width: 600px) {
+
+    .filterSelectors {
+        width: auto;
+    }
+
+}
