@@ -107,21 +107,6 @@ router.get("/videogames", (req, res, next) => {
                 })
             })
         }
-
-        /* //res.json({ msg: "OK", keyword: keyword})
-        axios.get("https://api.rawg.io/api/games?search=" + keyword + "&key=" + API_KEY).then(
-            apires => {
-                    console.log(apires.data.results)
-                    res.sendStatus(200)
-                    next()
-                }
-        ).catch(err => {
-            console.log("Error: ", err)
-            res.sendStatus(500)
-            next()
-        }) */
-
-
     }
 })
 

@@ -92,7 +92,7 @@ const GameCreate = () => {
       foundErrors.name = null
     }
 
-    if (formState.name && formState.length > 70 ) {
+    if (formState.name && formState.name.length > 70 ) {
       foundErrors.name = "El nombre del juego no debe tener más de 70 caracteres"
     } 
 
@@ -129,8 +129,7 @@ const GameCreate = () => {
     if (!foundErrors.name && !foundErrors.genres
       && !foundErrors.description && !foundErrors.release_date
       && !foundErrors.platforms && !foundErrors.background_image) {
-      //hacer post owo
-      console.log("No hay errores wiii")
+      
       
       const requestOptions = {
         method: "POST",

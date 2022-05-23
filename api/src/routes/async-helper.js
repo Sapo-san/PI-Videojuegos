@@ -46,13 +46,10 @@ async function* generateNewGameID() {
     let searching = true
     while (searching) {
         try {
-            console.log("Waiting for game number:", currentNumber)
             game = await Videogame.findByPk(currentNumber)
             if (game === null) {
-                console.log("found ID with no game yet", currentNumber)
                 searching = false
             } else {
-                console.log("game found:", game)
                 currentNumber += 1
             }
         } catch (err) {

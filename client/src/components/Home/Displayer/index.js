@@ -47,12 +47,11 @@ const Displayer = ({ setCurrentPage }) => {
             lastUsedfilters.origin === filters.origin &&
             lastUsedfilters.orderBy === filters.orderBy &&
             lastUsedfilters.orderDirection === filters.orderDirection) {
-              if ( gamesPostFilter.length <= gamesToDisplay.length ) {
+              if (gamesPostFilter.length > 0) {
                 return paginatedGames(gamesPostFilter)
               } else {
-                return (<h1>Cargando...</h1>)
+                return (<h1>No hay resultados...</h1>)
               }
-              
             } 
     
         }

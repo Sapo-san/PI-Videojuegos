@@ -10,7 +10,6 @@ function atributeProcessor(pfArray, attribute) {
                 strArray.push(pfArray[index]["id"])
                 break;
             default:
-                console.log(pfArray[index])
                 break;
         }
       
