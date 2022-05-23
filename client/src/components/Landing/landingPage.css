@@ -3,21 +3,54 @@ a {
 }
 
 .landingPage {
+    position: absolute;
+    top: 0;
+    left: 0;
+
     height: 100vh;
     width: 100vw;
     
-    /* background-color: black;
-    color: lightgray; */
+    background-color: rgba(0, 0, 0, 0.881);
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 3em;
+
+    color: white;
+
+    z-index: 2;
+
+
 }
 
 .landingImg {
-    outline: 5px solid lightslategray;
+
+    z-index: 1;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    height: 100vh;
+    width: 100vw;
+    background-image: url("https://static1.thegamerimages.com/wordpress/wp-content/uploads/2020/09/Steam-Games-vvia-Reddit.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+    filter: blur(4px);
+    -webkit-filter: blur(4px);
+    
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+
 }
 
 .redirectToHome {
@@ -30,6 +63,6 @@ a {
     }
     
     .landingImg {
-        max-width: 90vw;
+        max-width: 100vw;
     }
   }

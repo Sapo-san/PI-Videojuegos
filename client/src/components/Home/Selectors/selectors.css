@@ -13,3 +13,29 @@
     align-content: center;
     align-items: center;
 }
+
+.dualSelectors {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+.singleSelector {
+    padding-left: 1em;
+    padding-right: 1em;
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+select {
+    min-width: 14em;
+}
+

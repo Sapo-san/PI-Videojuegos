@@ -39,42 +39,48 @@ const Selectors = () => {
 
     return (
     <div className='filterSelectors'>
-        <div>
-            <label>Filtrar por género:</label>
-            <select value={filters.genre} onChange={ e => {
-                dispatcher(setPageFiltersGenre(e.target.value))
-            }}>
-                {listAvaibleGenres()}
-            </select>
+
+        <div className='dualSelectors'>
+            <div className='singleSelector' >
+                <label>Filtrar por género:</label>
+                <select value={filters.genre} onChange={ e => {
+                    dispatcher(setPageFiltersGenre(e.target.value))
+                }}>
+                    {listAvaibleGenres()}
+                </select>
+            </div>
+            <div className='singleSelector'>
+                <label>Filtrar por origen:</label>
+                <select value={filters.origin} onChange={ e => {
+                    dispatcher(setPageFiltersOrigin(e.target.value))
+                }}>
+                    <option value="all" > Todos </option>
+                    <option value="RAWG" > RAWG </option>
+                    <option value="this" > Esta app </option>
+                </select>
+            </div>
         </div>
-        <div>
-            <label>Filtrar por origen:</label>
-            <select value={filters.origin} onChange={ e => {
-                dispatcher(setPageFiltersOrigin(e.target.value))
-            }}>
-                <option value="all" > Todos </option>
-                <option value="RAWG" > RAWG </option>
-                <option value="this" > Esta app </option>
-            </select>
+        <div className='dualSelectors'>
+            <div className='singleSelector'>
+                <label>Ordenar por:</label>
+                <select value={filters.orderBy} onChange={ e => {
+                    dispatcher(setPageFiltersOrderBy(e.target.value))
+                }}>
+                    <option value="rat" > Rating </option>
+                    <option value="alf" > Alfabético </option>
+                </select>
+            </div>
+            <div className='singleSelector'>
+                <label>Orden:</label>
+                <select value={filters.orderDirection} onChange={ e => {
+                    dispatcher(setPageFiltersOrderDirection(e.target.value))
+                }}>
+                    <option value="up" > { filters.orderBy === "alf" ? "A-Z" : "Ascendente"} </option>
+                    <option value="down" > { filters.orderBy === "alf" ? "Z-A" : "Descendente"} </option>
+                </select>
+            </div>
         </div>
-        <div>
-            <label>Ordenar por:</label>
-            <select value={filters.orderBy} onChange={ e => {
-                dispatcher(setPageFiltersOrderBy(e.target.value))
-            }}>
-                <option value="rat" > Rating </option>
-                <option value="alf" > Alfabético </option>
-            </select>
-        </div>
-        <div>
-            <label>Orden:</label>
-            <select value={filters.orderDirection} onChange={ e => {
-                dispatcher(setPageFiltersOrderDirection(e.target.value))
-            }}>
-                <option value="up" > { filters.orderBy === "alf" ? "A-Z" : "Ascendente"} </option>
-                <option value="down" > { filters.orderBy === "alf" ? "Z-A" : "Descendente"} </option>
-            </select>
-        </div>
+  
     </div>
     )
 }
