@@ -1,6 +1,9 @@
 // procesador de atributo de juego particular 
 function atributeProcessor(pfArray, attribute) {
     let strArray = []
+    
+    if (pfArray === null) return []
+
     for (let index = 0; index < pfArray.length; index++) {
         switch (attribute) {
             case "platforms":

@@ -64,6 +64,56 @@ async function* generateNewGameID() {
     }
 }
 
+const validatePostRequest = (req) => {
 
+    let foundErrors = {}
 
-module.exports = { getGameDescription, generateNewGameID, getGamesGenres }
+    if (Object.keys(req.body).length === 0) {
+        return "No body found"
+    }
+  
+    if (!req.body.name) {
+      foundErrors.name = "El juego debe tener un nombre"
+    }
+
+    if (req.body.name && req.body.name.length > 70 ) {
+      foundErrors.name = "El nombre del juego no debe tener más de 70 caracteres"
+    } 
+
+    if (!req.body.genres || (Array.isArray(req.body.genres) && req.body.genres.length === 0)) {
+      foundErrors.genres = "El juego debe tener al menos un género"
+    }
+
+    if (!req.body.description) {
+      foundErrors.description = "El juego debe tener una descripción"
+    }
+
+    if (!req.body.release_date) {
+      foundErrors.release_date = "El juego debe tener una fecha de lanzamiento"
+    } 
+
+    if (!req.body.platforms) {
+      foundErrors.platforms = "El juego debe tener al menos una plataforma"
+    } 
+    
+    if (req.body.background_image && req.body.background_image.length > 255 ) {
+      foundErrors.background_image = "El link a la imagen del juego no puede tener más de 255 carácteres"
+    }
+
+    if (!req.body.rating || (req.body.rating < 0 && req.body.rating > 5)) {
+      foundErrors.rating = "El juego debe tener un rating (valor flotante entre 0 y 5)"
+    }
+
+    if (!foundErrors.name && !foundErrors.genres
+      && !foundErrors.description && !foundErrors.release_date
+      && !foundErrors.platforms && !foundErrors.background_image
+      && !foundErrors.rating) {
+        return null      
+    }
+
+    
+
+  return foundErrors
+}
+
+module.exports = { getGameDescription, generateNewGameID, getGamesGenres, validatePostRequest }

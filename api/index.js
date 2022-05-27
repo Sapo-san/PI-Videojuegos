@@ -26,8 +26,8 @@ const { populateDb } = require('./index-helper.js');
 const { HOSTING_PORT } = process.env;
 
 /* Configuración de sequelize */
-//const connConfig =  { force: true } // Syncing all the models at once.
-const connConfig =  {} // Don't sync
+const connConfig =  { force: true } // Syncing all the models at once.
+//const connConfig =  {} // Don't sync
 
 /* Conectar con BD y luego correr servidor */
 conn.sync(connConfig).then(() => {

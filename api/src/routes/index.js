@@ -6,7 +6,8 @@ const Op = Sequelize.Op
 const {
         getGameDescription,
         generateNewGameID,
-        getGamesGenres
+        getGamesGenres,
+        validatePostRequest
       } = require('./async-helper')
 
 const axios = require("axios");
@@ -206,28 +207,37 @@ router.get("/genres", (req, res, next) => {
 
 router.post("/videogame", (req, res, next) => {
 
-    idGenerator.next().then(data => {
-        let gameInfo = {
-            ...req.body,
-            web_id: data.value
-        }
+    let postErrors = validatePostRequest(req)
 
-        gameInfo.name = gameInfo.name.trim().charAt(0).toUpperCase() + gameInfo.name.trim().slice(1);
+    if (postErrors !== null) {
+        res.statusCode = 400
+        res.json(postErrors)
+        next()
 
-        Videogame.create(gameInfo).then(game => {
-            game.addGenres(req.body.genres).then(() => {
-                res.json({ msg: "success", web_id: game.web_id })
+    } else {
+
+        idGenerator.next().then(data => {
+            let gameInfo = {
+                ...req.body,
+                web_id: data.value
+            }
+
+            gameInfo.name = gameInfo.name.trim().charAt(0).toUpperCase() + gameInfo.name.trim().slice(1);
+
+            Videogame.create(gameInfo).then(game => {
+                game.addGenres(req.body.genres).then(() => {
+                    res.json({ msg: "success", web_id: game.web_id })
+                    next()
+                })
+            }).catch(err => {
+                console.log("Error while Attempting to Create:", err)
+                res.sendStatus(500)
                 next()
             })
-        }).catch(err => {
-            console.log("Error while Attempting to Create:", err)
-            res.sendStatus(500)
-            next()
+
         })
 
-    })
-
-    
+    }
 })
 
 module.exports = router;
