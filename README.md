@@ -1,7 +1,6 @@
 # Proyecto Individual Henry Bootcamp
-
 ## Videogames app
-Esta es la versión final de la aplicación que se me pidió construir terminando Henry Bootcamp. Es una aplicación sencilla construida usando React+Redux en el frontend y utilizando Node y Express.js en el backend. Adicionalmente utiliza Sequelize para conectarse a una base de datos local.
+Esta es la versión final de la aplicación que se me pidió construir terminando [Henry Bootcamp](https://www.soyhenry.com/). Es una aplicación sencilla construida usando [React](https://es.reactjs.org/)+[Redux](https://es.redux.js.org/) en el frontend y utilizando [Node](https://nodejs.org/es/) y [Express.js](https://expressjs.com/es/) en el backend. Adicionalmente utiliza [Sequelize](https://sequelize.org/) para conectarse a una base de datos local.
 
 ## Ambiente de desarrollo
 Hice este proyecto en Windows 11 con WSL 2 (Ubuntu) y utilicé:
@@ -11,10 +10,12 @@ Hice este proyecto en Windows 11 con WSL 2 (Ubuntu) y utilicé:
 Para ver las versiones de cada dependencia usada, revisar los `package.json` dentro de las carpetas `api` y `client` respectivamente.
 
 ## Screenshots
-**Landing Screen**, como se me indicó en el enunciado: una vista con una imagen pertinente al proyecto y un botón para ingresar a la aplicación.
+### Pantalla de bienvenida
+Como se me indicó en el enunciado: una vista con una imagen pertinente al proyecto y un botón para ingresar a la aplicación.
 ![Screenshot 1](screenshots/Screenshot_1.png)
 
-**La vista de inicio de la aplicación**: Una barra de navegación con dos botones: "Inicio" y "Crear Juego", luego la barra de busqueda, seguida por los selectores de filtros y ordenación. Finalmente, el paginado y el display de tarjetas de juegos.
+### Vista de inicio
+La vista de inicio de la aplicación: Una barra de navegación con dos botones: "Inicio" y "Crear Juego", luego la barra de busqueda, seguida por los selectores de filtros y ordenación. Finalmente, el paginado y el display de tarjetas de juegos.
 
 La aplicación por defecto trae 120 juegos desde la API y los guarda en la base de datos, para asi no consultar constantemente la API y agotar el número de usos asociados a la API Key.
 ![Screenshot 2](screenshots/Screenshot_2.png)
@@ -25,9 +26,10 @@ La búsqueda es inicialmente solo en la base de datos de la aplicación. Sin emb
 Luego de buscar en la API externa, el tercer botón desaparece y muestra los resultados de la búsqueda.
 ![Screenshot 4](screenshots/Screenshot_4.png)
 
-**Formulario de creación de juegos**: en esta vista se puede ver un formulario controlado por javascript que permite añadir un juego a la aplicación. Los juegos creados en este form se guardan solo en la base de datos local.
+### Formulario de creación de juegos
+En esta vista se puede ver un formulario controlado por javascript que permite añadir un juego a la aplicación. Los juegos creados en este form se guardan solo en la base de datos local.
 
-Adicionalmente, el selector para añadir géneros es dinámico. A medida que estos se agregan al juego, también desaparecen de las opciones disponibles para añadir y si se agrega un link a una imagen en el form, esta será previsualizada al lado izquierdo.
+Adicionalmente, el selector para añadir géneros es dinámico. A medida que estos se agregan en el form, también desaparecen de las opciones disponibles para escoger del selector. Aparte, si se agrega un link a una imagen en el form, esta será previsualizada al lado izquierdo.
 ![Screenshot 5](screenshots/Screenshot_5.png)
 
 Las validaciones verifican lo siguiente: Que el juego tenga nombre y este no tenga más de 72 caracteres, que el juego tenga al menos un género, que tenga descripción, que el rating sea un punto flotante entre cero y cinco, que tenga al menos una plataforma y que de tener un link a una imagen, la imagen no puede tener mas de 255 caracteres.
