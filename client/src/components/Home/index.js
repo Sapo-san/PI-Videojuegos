@@ -7,6 +7,7 @@ import Selectors from './Selectors'
 import './home.css'
 
 const GAME_REQUEST_URL = "http://localhost:3001/videogames?name="
+const GAME_REQUEST_URL_2 = "http://localhost:3001/videogames"
 
 const Home = () => {
 
@@ -15,6 +16,22 @@ const Home = () => {
   const gamesPostFilter = useSelector( state => state.gameInfoPostFilters)
   const currentDisplayPage = useSelector(state => state.currentPage)
   const dispatcher = useDispatch()
+
+  function reloadGames() {
+    fetch(GAME_REQUEST_URL_2).then(res => res.json().then(
+      data => {
+        console.log(data)
+        dispatcher(loadGameInfo(data))
+        dispatcher(resetPageFilters())
+        setCurrentDisplayPage(1)
+        dispatcher(setPostFilterGames([null,null]))
+      }
+    )).catch(err => {
+      console.log(err)
+      return (<h1>Error 500, ver consola para mas detalles</h1>)
+    })
+  }
+
 
   function searchGames(api) {
     if (api) {
@@ -89,6 +106,13 @@ const Home = () => {
         e.preventDefault()
         searchGames()
       }}>Buscar</button>
+
+      <button className='searchButton' onClick={(e) => {
+        e.preventDefault()
+        dispatcher(setSearchBarValue(''))
+        reloadGames()
+      }}
+      >Reiniciar</button>
     </div>
 
     {showExtraSearchButton()}
