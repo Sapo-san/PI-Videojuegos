@@ -12,6 +12,7 @@ const Landing = () => {
       <h1>Tema: Videojuegos</h1>
       <Link className="button" to="home">Ir a Inicio</Link>
       <p>Este Proyecto consume <a href="https://api.rawg.io/docs/">RAWG API</a>.</p>
+      <p>Puedes revisar mis otros proyectos en mi Github: <a href="https://github.com/Sapo-san">@Sapo-san</a></p>
     </div>
     
     

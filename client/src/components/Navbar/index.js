@@ -21,12 +21,23 @@ const Navbar = () => {
     // en cualquier otra ruta...
     return (
         <div className="navbar-container">
-            <div className='navlink-container' onClick={() => navigate("/home")}>
-                <NavLink className="navlink" to="/home">Inicio</NavLink>
+            <div className='navbar-title'>
+                <label>PI Videogames</label>
             </div>
-            <div className='navlink-container' onClick={() => navigate("/create-new-game")}>
-                <NavLink className="navlink" to="/create-new-game">Crear Juego</NavLink>
+
+            <div className='navbar-buttons'>
+                <div className='navlink-container' onClick={() => navigate("/home")}>
+                    <NavLink className="navlink" to="/home">Inicio</NavLink>
+                </div>
+                <div className='navlink-container' onClick={() => navigate("/create-new-game")}>
+                    <NavLink className="navlink" to="/create-new-game">Crear Juego</NavLink>
+                </div>
             </div>
+
+            <div className='navbar-author' >
+                <label>Proyecto hecho por <a href="https://github.com/Sapo-san">@Sapo-san</a></label>
+            </div>
+                
         </div>
     )
 }
