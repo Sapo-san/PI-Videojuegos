@@ -1,4 +1,6 @@
 
+postgres-data
+
 # Logs
 logs
 *.log

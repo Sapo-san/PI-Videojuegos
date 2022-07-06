@@ -1,3 +1,4 @@
+import env from "react-dotenv";
 import React from 'react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -5,7 +6,7 @@ import { loadGameDetails } from '../../redux/actions.js'
 import { useSelector, useDispatch } from 'react-redux'
 import './gameDetails.css'
 
-const GAME_DETAILS_URL =  'http://localhost:3001/videogames/'
+const GAME_DETAILS_URL =  env.BACKEND_URL + '/videogames/'
 
 const GameDetails = () => {
     const { id } = useParams()

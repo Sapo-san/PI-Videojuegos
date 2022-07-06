@@ -1,0 +1,10 @@
+FROM node:16.15 as REACT-BUILD
+WORKDIR /client
+COPY ./package.json ./
+RUN npm i --production
+COPY . .
+ENV BACKEND_URL= 
+RUN npm run build
+
+FROM nginx
+COPY --from=REACT-BUILD /client/build /usr/share/nginx/html

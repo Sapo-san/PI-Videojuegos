@@ -6,9 +6,10 @@ import { filterGamesByGenre, filterGamesByOrigin, orderGamesBy } from '../filter
 import { setPostFilterGames, loadGameInfo } from '../../../redux/actions'
 import './displayer.css'
 
-const GAME_REQUEST_URL = "http://localhost:3001/videogames"
+const GAME_REQUEST_URL = window.env.BACKEND_URL + "/videogames"
 
 const Displayer = ({ setCurrentPage }) => {
+
     /**
      * Lección aprendida: en react, SIEMPRE separar
      * la lógica del componente del renderizado del mismo

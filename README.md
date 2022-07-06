@@ -2,8 +2,11 @@
 ## Videogames app
 Esta es la versión final de la aplicación que se me pidió construir terminando [Henry Bootcamp](https://www.soyhenry.com/). Es una aplicación sencilla construida usando [React](https://es.reactjs.org/)+[Redux](https://es.redux.js.org/) en el frontend y utilizando [Node](https://nodejs.org/es/) y [Express.js](https://expressjs.com/es/) en el backend. Adicionalmente utiliza [Sequelize](https://sequelize.org/) para conectarse a una base de datos local.
 
+Para poder deployarla con más facilidad, dockericé la aplicación.
+
 ## Ambiente de desarrollo
 Hice este proyecto en Windows 11 con WSL 2 (Ubuntu) y utilicé:
+- Docker Desktop v4.10.1 (con docker-compose)
 - Node v16.13.1
 - PostgreSQL 12.10
 
@@ -42,7 +45,6 @@ Por último, de volver a la vista de inicio, se puede observar su tarjeta agrega
 ![Screenshot 8](screenshots/Screenshot_8.png)
 
 ## Para levantar la aplicación
-### 
 Luego de clonar el repo, agregar un archivo `.env` dentro de la carpeta `api` con las siguientes variables de entorno: 
 
 ```
@@ -51,9 +53,19 @@ DB_PASSWORD=   <contraseña de postgres>
 DB_HOST=       <dirección de la base de datos de postgres>
 HOSTING_PORT=  <puerto, por defecto distinto a 3000>
 API_KEY=       <llave de la api de RAWG>
+ALLOW_ORIGIN=  <dominio del que el front hace las requests>
 ```
-Después, instalar las dependencias dentro de las carpetas `api` y `client` con `npm install`.
 
-Asegurarse de tener corriendo el servicio de base de datos en segundo plano (En Ubuntu, `sudo service postgresql start`).
+Luego, editar la siguiente linea en el Dockerfile.prod en la carpeta `client`, la URL del backend despues del signo = , sin espacios ni comillas. Ejemplo:
+```
+BACKEND_URL=http://url.de/ejemplo
+```
 
-Finalmente para levantar la aplicación, hacer `npm start` dentro de `api` y luego dentro de `client` respectivamente y luego acceder a `localhost:3000` en el navegador.
+Y finalmente, añadir un archivo `.env` a la carpeta raiz del proyecto, con las siguientes variables:
+
+```
+POSTGRES_USER=videogames   <se creará un usuario y su base de datos con este nombre en postgres>
+POSTGRES_PASSWORD=         <contraseña del usuario videogames de postgres>
+```
+
+Finalmente para levantar la aplicación, hacer `docker-compose build` dentro de la carpeta raiz del proyecto y luego `docker-compose up` respectivamente y luego acceder a `localhost:8080` en el navegador.
