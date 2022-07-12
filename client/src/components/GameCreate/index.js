@@ -1,4 +1,3 @@
-import env from "react-dotenv";
 import React from 'react'
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -7,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { loadGenres, reLoadGameInfo } from '../../redux/actions';
 import './gameCreate.css'
 
-const GAME_CREATE_URL =  env.BACKEND_URL + "/videogame/"
-const GAME_REQUEST_URL = env.BACKEND_URL + "/videogames"
-const GENRES_REQUEST_URL = env.BACKEND_URL + "/genres"
+const GAME_CREATE_URL =  window.env.BACKEND_URL + "/videogame/"
+const GAME_REQUEST_URL = window.env.BACKEND_URL + "/videogames"
+const GENRES_REQUEST_URL = window.env.BACKEND_URL + "/genres"
 
 const GameCreate = () => {
 

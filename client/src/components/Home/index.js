@@ -1,4 +1,3 @@
-import env from "react-dotenv";
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setSearchBarValue, setCurrentPage, loadGameInfo, setPostFilterGames, setExtraSearchButton, resetPageFilters } from '../../redux/actions'
@@ -7,8 +6,8 @@ import Pagination from './Pagination'
 import Selectors from './Selectors'
 import './home.css'
 
-const GAME_REQUEST_URL = env.BACKEND_URL + "/videogames?name="
-const GAME_REQUEST_URL_2 = env.BACKEND_URL + "/videogames"
+const GAME_REQUEST_URL = window.env.BACKEND_URL + "/videogames?name="
+const GAME_REQUEST_URL_2 = window.env.BACKEND_URL + "/videogames"
 
 const Home = () => {
 

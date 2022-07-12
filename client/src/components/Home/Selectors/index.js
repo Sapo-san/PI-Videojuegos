@@ -1,4 +1,3 @@
-import env from "react-dotenv";
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import './selectors.css'
@@ -11,7 +10,7 @@ import {
     loadGenres
 } from '../../../redux/actions'
 
-const GENRES_REQUEST_URL = env.BACKEND_URL + "/genres"
+const GENRES_REQUEST_URL = window.env.BACKEND_URL + "/genres"
 
 const Selectors = () => {
 
