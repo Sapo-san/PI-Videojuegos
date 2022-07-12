@@ -9,6 +9,7 @@ import './gameCreate.css'
 
 const GAME_CREATE_URL =  env.BACKEND_URL + "/videogame/"
 const GAME_REQUEST_URL = env.BACKEND_URL + "/videogames"
+const GENRES_REQUEST_URL = env.BACKEND_URL + "/genres"
 
 const GameCreate = () => {
 
@@ -204,7 +205,7 @@ const GameCreate = () => {
   const genreSelector = () => {
 
     if (availableGenres === null) {
-      fetch("http://localhost:3001/genres").then(res => {
+      fetch(GENRES_REQUEST_URL).then(res => {
         res.json().then(data => {
           //setAvailableGenres(data)
           dispatcher(loadGenres(data))

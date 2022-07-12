@@ -10,6 +10,8 @@ import {
     loadGenres
 } from '../../../redux/actions'
 
+const GENRES_REQUEST_URL = env.BACKEND_URL + "/genres"
+
 const Selectors = () => {
 
     //const [availableGenres, setAvailableGenres] = useState(null)
@@ -28,7 +30,7 @@ const Selectors = () => {
     }
 
     if (availableGenres === null) {
-        fetch("http://localhost:3001/genres").then(res => {
+        fetch(GENRES_REQUEST_URL).then(res => {
             res.json().then(data => {
                 //setAvailableGenres(data)
                 dispatcher(loadGenres(data))
